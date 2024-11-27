@@ -3,7 +3,12 @@ use std::fs;
 
 use std::fs::read_to_string;
 
-fn process_blog(hugo_base_dir: &String, filename: &str) {
+fn process_blog(
+    hugo_base_dir: &String,
+    obsidan_img_folder: &String,
+    filename: &str,
+    obsidan_dir: &String,
+) {
     fs::create_dir_all("").unwrap();
 
     let mut count = 0;
@@ -24,8 +29,9 @@ fn process_blog(hugo_base_dir: &String, filename: &str) {
                     image_base = image_parsed_base.to_string();
                 }
 
-                let mut static_base = hugo_base_dir + "/static";
-                static_base.push_str(&parsed_path);
+                let mut static_base = hugo_base_dir.clone();
+
+                static_base.push_str("/static");
 
                 println!("static base {}", static_base);
                 fs::create_dir_all(static_base.clone()).unwrap();
@@ -40,17 +46,16 @@ fn process_blog(hugo_base_dir: &String, filename: &str) {
                 .nth(0)
                 .unwrap();
 
-            let mut attachment_base = "/Users/emma-training/vred/Img/".to_owned();
+            let mut attachment_base = obsidan_img_folder.clone();
             attachment_base.push_str(imagename);
 
-            let mut dest_path = BLOG_STATIC_BASE.to_string();
-
+            let mut dest_path = hugo_base_dir.clone();
             dest_path.push_str(&parsed_path);
             dest_path.push_str(&image_base);
             dest_path.push_str(&count.to_string());
             dest_path.push_str(".png");
-
-            //println!("copied {} to {}",attachment_base,dest_path);
+            
+            println!("copied {} to {}",attachment_base,dest_path);
 
             fs::copy(attachment_base.clone(), dest_path.clone()).unwrap();
 
@@ -70,27 +75,32 @@ fn process_blog(hugo_base_dir: &String, filename: &str) {
 #[command(version, about, long_about = None)]
 struct Args {
     /// path to obsidian source markdown
-    #[arg(short, long)]
-    obisdian_dir: String,
+    #[arg( long)]
+    obsidian_dir: String,
 
     ///path to obsidian img folder
-    #[arg(short, long)]
-    obisdian_dir_imgs: String,
+    #[arg( long)]
+    obsidian_dir_imgs: String,
 
     /// path to hugo folder
-    #[arg(short, long)]
+    #[arg( long)]
     hugo_path: String,
 }
 
 fn main() {
     let args = Args::parse();
 
-    let paths = fs::read_dir(args.obisdian_dir).unwrap();
+    let paths = fs::read_dir(args.obsidian_dir.clone()).unwrap();
 
     for path in paths {
         let path = path.unwrap().path();
         let display = path.display();
 
-        process_blog(&args.hugo_path, &display.to_string());
+        process_blog(
+            &args.hugo_path,
+            &args.obsidian_dir_imgs,
+            &display.to_string(),
+            &args.obsidian_dir,
+        );
     }
 }
