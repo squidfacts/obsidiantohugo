@@ -15,13 +15,14 @@ copied /Users/exit/Desktop/vault/Imgs/Pasted image 20241127143642.png to /Users/
 
 ### Example obsidian config
 
+```
 ---
 staticPath: lockbit2
 Title: "Hack the Box: Lockbit 2.0"
 Description: Analysis of the Hack the Box 2.0 malware sherlock
 Date: 2024-11-27
 ---
-
+```
 
 - `staticPath` this path is used for the image path and hugo file name
 - `Title` this is the title set in the hugo file
