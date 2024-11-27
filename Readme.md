@@ -13,7 +13,7 @@ copied /Users/exit/Desktop/vault/Imgs/Pasted image 20241127141604.png to /Users/
 copied /Users/exit/Desktop/vault/Imgs/Pasted image 20241127143642.png to /Users/exit/blag/static/lockbit2/lockbit22.png
 ```
 
-### Example obsidian config
+### Example obsidian Properties
 
 ```
 ---
