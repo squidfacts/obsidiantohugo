@@ -7,7 +7,7 @@ fn process_blog(
     hugo_base_dir: &String,
     obsidan_img_folder: &String,
     filename: &str,
-    obsidan_dir: &String,
+    _obsidan_dir: &String,
 ) {
     fs::create_dir_all("").unwrap();
 
@@ -59,13 +59,13 @@ fn process_blog(
 
             fs::copy(attachment_base.clone(), dest_path.clone()).unwrap();
 
-            println!(
+           /*  println!(
                 "{}",
                 "![img](".to_owned() + &parsed_path + &image_base + &count.to_string() + ".png)"
-            );
+            ); */
             count += 1;
         } else {
-            println!("{}", s);
+            //println!("{}", s);
         }
     }
 }
