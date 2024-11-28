@@ -30,3 +30,15 @@ Date: 2024-11-27
 - `Title` this is the title set in the hugo file
 - `Description` this is the description of the page in the hugo file
 - `Date` this is the date for the hugo publish date
+
+
+### Generated hugo header
+
+```
++++
+title = 'Hack the Box: Lockbit 2.0'
+date =  2024-11-27T00:13:48-05:00
+draft = false
+summary = 'Analysis of the Hack the Box 2.0 malware sherlock'
++++
+```
