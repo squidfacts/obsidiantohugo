@@ -16,6 +16,9 @@ fn process_blog(
 
     let mut parsed_path = String::new();
 
+    let mut description: Option<String> = None;
+    let mut title: Option<String> = None;
+    let mut date: Option<String> = None;
     let mut file: Option<fs::File> = None;
     let mut write = false;
     for line in read_to_string(filename).unwrap().lines() {
@@ -23,7 +26,7 @@ fn process_blog(
         // println!("{}",s);
 
         if s.contains("staticPath:") {
-            if let Some(path_part) = s.split(':').nth(1) {
+            if let Some(path_part) = s.splitn(2, ':').nth(1) {
                 let path_part_trimmed = path_part.trim();
 
                 parsed_path = path_part_trimmed.to_string();
@@ -44,9 +47,30 @@ fn process_blog(
                 file = Some(File::create(hugo_md_file.clone()).unwrap());
             }
         }
+        if s.contains("Description:") {
+            if let Some(parsed_description) = s.splitn(2, ':').nth(1) {
+                let parsed_description: &str = parse_text(parsed_description);
+                description = Some(parsed_description.to_string());
+            }
+        }
+
+        if s.contains("Title:") {
+            if let Some(parsed_description) = s.splitn(2, ':').nth(1) {
+                let parsed_description: &str = parse_text(parsed_description);
+                title = Some(parsed_description.to_string());
+            }
+        }
+
+        if s.contains("Date:") {
+            if let Some(parsed_description) = s.splitn(2, ':').nth(1) {
+                date = Some(parsed_description.to_string());
+            }
+        }
+
         if s.contains("---") {
             if !file.is_none() {
                 write = true;
+                write_header(&file, &title, &date, &description);
             }
         }
         if s.contains("![[") {
@@ -98,7 +122,52 @@ fn process_blog(
 }
 
 fn write_to_file(mut file: &File, str: String) {
-    file.write((str  + "\n").as_bytes()).unwrap();
+    file.write((str + "\n").as_bytes()).unwrap();
+}
+
+fn parse_text(s: &str) -> &str {
+
+    let mut s = &s[1..];
+
+    if s.contains("\"") {
+
+        //trim qoutes
+        s = &s[1..];
+        s = &s[0..s.len()-1];
+
+    }
+
+    return s
+}
+
+fn write_header(
+    file: &Option<File>,
+    title: &Option<String>,
+    date: &Option<String>,
+    description: &Option<String>,
+) {
+    let mut file = file.as_ref().unwrap();
+
+    file.write(b"+++\n").unwrap();
+
+    let title = "title = '".to_owned() + title.as_ref().expect("Title: Not set") + "'\n";
+
+    file.write(title.as_bytes()).unwrap();
+
+    let date: String =
+        "date = ".to_owned() + date.as_ref().expect("Date: not set") + "T00:13:48-05:00\n";
+
+    file.write(date.as_bytes()).unwrap();
+
+    let draft: String = "draft = false\n".to_string();
+
+    file.write(draft.as_bytes()).unwrap();
+
+    let description: String = "summary = '".to_owned() + description.as_ref().expect("Description: not set") + "'\n";
+    
+    file.write(description.as_bytes()).unwrap();
+
+    file.write(b"+++\n").unwrap();
 }
 
 /// Progam to generate hugo markdown from obsidian markdown

@@ -2,6 +2,8 @@
 
 # Usage
 
+the current behavior is to publish everything from the folder with `draft = false`.
+
 ```
 cargo run -- --obsidian-dir ~/Desktop/vault/Publish --obsidian-dir-imgs ~/Desktop/vault/Imgs/ --hugo-path ~/blag/
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
