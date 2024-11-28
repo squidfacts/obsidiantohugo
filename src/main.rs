@@ -103,7 +103,7 @@ fn process_blog(
 
             fs::copy(attachment_base.clone(), dest_path.clone()).unwrap();
 
-            let new_image_markdown: String = "![img](".to_owned()
+            let new_image_markdown: String = "![img](/".to_owned()
                 + &parsed_path
                 + "/"
                 + &parsed_path
