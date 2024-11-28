@@ -34,6 +34,7 @@ tags:
 - `Title` this is the title set in the hugo file
 - `Description` this is the description of the page in the hugo file
 - `Date` this is the date for the hugo publish date
+- `tags` converts obsidian tags to hugo tags
 
 
 ### Generated hugo header
