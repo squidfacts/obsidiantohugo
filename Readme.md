@@ -21,8 +21,12 @@ copied /Users/exit/Desktop/vault/Imgs/Pasted image 20241127143642.png to /Users/
 ---
 staticPath: lockbit2
 Title: "Hack the Box: Lockbit 2.0"
-Description: Analysis of the Hack the Box 2.0 malware sherlock
+Description: Analysis of a UPX protected malware sample from HTB
 Date: 2024-11-27
+tags:
+  - HTB
+  - CTF
+  - Malware
 ---
 ```
 
@@ -39,6 +43,7 @@ Date: 2024-11-27
 title = 'Hack the Box: Lockbit 2.0'
 date =  2024-11-27T00:13:48-05:00
 draft = false
-summary = 'Analysis of the Hack the Box 2.0 malware sherlock'
+summary = 'Analysis of a UPX protected malware sample from HTB'
+tags = ['HTB','CTF','Malware']
 +++
 ```

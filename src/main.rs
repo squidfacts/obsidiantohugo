@@ -20,6 +20,7 @@ fn process_blog(
     let mut title: Option<String> = None;
     let mut date: Option<String> = None;
     let mut file: Option<fs::File> = None;
+    let mut tags: Vec<String> = Vec::new();
     let mut write = false;
     for line in read_to_string(filename).unwrap().lines() {
         let s = line.to_string();
@@ -66,11 +67,16 @@ fn process_blog(
                 date = Some(parsed_description.to_string());
             }
         }
-
+        if s.contains(" - ") {
+            if let Some(parsed_tag) = s.splitn(2, "-").nth(1) {
+                let parsed_tag = &parsed_tag[1..];
+                tags.push(parsed_tag.to_string());
+            }
+        }
         if s.contains("---") {
             if !file.is_none() {
                 write = true;
-                write_header(&file, &title, &date, &description);
+                write_header(&file, &title, &date, &description, &tags);
             }
         }
         if s.contains("![[") {
@@ -126,18 +132,15 @@ fn write_to_file(mut file: &File, str: String) {
 }
 
 fn parse_text(s: &str) -> &str {
-
     let mut s = &s[1..];
 
     if s.contains("\"") {
-
         //trim qoutes
         s = &s[1..];
-        s = &s[0..s.len()-1];
-
+        s = &s[0..s.len() - 1];
     }
 
-    return s
+    return s;
 }
 
 fn write_header(
@@ -145,6 +148,7 @@ fn write_header(
     title: &Option<String>,
     date: &Option<String>,
     description: &Option<String>,
+    tags: &Vec<String>,
 ) {
     let mut file = file.as_ref().unwrap();
 
@@ -163,9 +167,29 @@ fn write_header(
 
     file.write(draft.as_bytes()).unwrap();
 
-    let description: String = "summary = '".to_owned() + description.as_ref().expect("Description: not set") + "'\n";
-    
+    let description: String =
+        "summary = '".to_owned() + description.as_ref().expect("Description: not set") + "'\n";
+
     file.write(description.as_bytes()).unwrap();
+
+    if !tags.is_empty() {
+        let mut tags_str = "tags = [".to_string();
+
+        for i in tags {
+            let tag_str = "'".to_owned() + i + "',";
+
+            tags_str.push_str(&tag_str);
+        }
+
+        //remove trailing comma
+        let  tags_str = &tags_str[0..tags_str.len()-1];
+
+        let mut tags_str = tags_str.to_string();
+
+        tags_str.push_str("]\n");
+
+        file.write(tags_str.as_bytes()).unwrap();
+    }
 
     file.write(b"+++\n").unwrap();
 }
